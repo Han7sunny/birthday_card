@@ -1,0 +1,13 @@
+{% extends 'start_form.html' %}
+{%load bootstrap4%}
+{%block title%}회원가입{%endblock title%}
+
+    
+{%block content%}
+    <form method="post" action = "{%url 'account:login'%}">
+        {% csrf_token %}
+        {%bootstrap_form form %}
+        <button type='submit' class='btn btn-primary'>가입</button>
+        <button type='reset' class='btn btn-info'>초기화</button>
+    </form>
+{%endblock content%}
