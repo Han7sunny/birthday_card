@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap4',
     'account',
+    'card',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,6 +134,6 @@ AUTH_USER_MODEL = 'account.CustomUser' # 이거 안 하면 python manage.py make
         # HINT: Add or change a related_name argument to the definition for 'account.CustomUser.groups' or 'auth.User.groups'.
 
 # 로그인 / 로그아웃
-LOGIN_URL = '/account/login/'
-# LOGIN_REDIRECT_URL = ''
-# LOGOUT_REDIRECT_URL = ''
+LOGIN_URL = '/account/login'
+LOGIN_REDIRECT_URL = '/card/mailbox' # 로그인 성공하면 넘어갈 url
+LOGOUT_REDIRECT_URL = '/'
