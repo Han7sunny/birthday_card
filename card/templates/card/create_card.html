@@ -1,5 +1,10 @@
 {%extends 'start_form.html'%}
-{%block title%}엽서 작성{%endblock title%}
+{%load bootstrap4%}
+{%block title%}편지 등록{%endblock title%}
 {%block content%}
-    
+    <form method = 'post'>
+        {%csrf_token%}
+        {%bootstrap_form form%}
+        <button class='btn btn-primary'>편지 등록</button>
+    </form>
 {%endblock content%}

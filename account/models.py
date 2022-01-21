@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 # username, password, birthday
 class CustomUser(AbstractUser):
-
+    # month = list(range(1,13))
     name = models.CharField(verbose_name='닉네임', max_length=20) # 생일 당사자
     birthday = models.DateField(verbose_name='생년월일') # 20XXXXXX ,max_length=8
+    # cards = models.Arr
