@@ -2,6 +2,7 @@
 {%block title%}우편함{%endblock title%}
 {%block content%}
 <!--생일 편지를 작성해주세요 앞에 해당 우편함 주인 이름?-->
+    {{user.name}}님 환영합니다.
     현재  _개의 편지가 도착했습니다. <br>
     <!--편지 리스트-->
     <a href = "{% url 'card:create' %}" class = 'btn'>편지 작성</a>
