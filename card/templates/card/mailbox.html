@@ -5,5 +5,5 @@
     {{user.name}}님 환영합니다.
     현재  _개의 편지가 도착했습니다. <br>
     <!--편지 리스트-->
-    <a href = "{% url 'card:create' %}" class = 'btn'>편지 작성</a>
+    <button type = "button" class = "btn btn-primary"onclick="location.href='/account/create'">편지 작성</button>
 {%endblock content%}

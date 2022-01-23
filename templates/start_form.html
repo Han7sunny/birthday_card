@@ -19,8 +19,11 @@
     <h5>생일 편지를 작성해주세요.</h5>
     <br>
     {%block content%}
-    <a href = "{% url 'account:login' %}" class = 'btn'>로그인</a>
-    <a href = "{% url 'account:join' %}" class = 'btn'>회원가입</a>
+    <button type = "button" class = "btn btn-primary"onclick="location.href='/account/login'">로그인</button>
+    <button type = "button" class = "btn btn-primary"onclick="location.href='/account/join'">회원가입</button>
+
+    <!-- <a href = "{% url 'account:login' %}" class = 'btn'>로그인</a>
+    <a href = "{% url 'account:join' %}" class = 'btn'>회원가입</a> -->
     {%endblock content%}
     </div>
 </body>
