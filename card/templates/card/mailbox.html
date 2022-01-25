@@ -2,8 +2,83 @@
 {%block title%}우편함{%endblock title%}
 {%block content%}
 <!--생일 편지를 작성해주세요 앞에 해당 우편함 주인 이름?-->
-    {{user.name}}님 환영합니다.
-    현재  _개의 편지가 도착했습니다. <br>
-    <!--편지 리스트-->
-    <button type = "button" class = "btn btn-primary"onclick="location.href='/account/create'">편지 작성</button>
-{%endblock content%}
+    {% if total == 0 %}
+    📭 <br>
+    아직 도착한 편지가 없어요! <br>
+    {{user.username}}님에게 첫번째 편지를 보내주세요! <br>
+    <button type = 'button' class = 'btn' onclick='location.href = "/{{user.username}}/board/create"' style="background-color:aliceblue; color: plum; " >편지 작성</button> <br>
+    
+    {%else%}
+    <h3>📩 {{user.username}}님 앞으로 {{total}}통의 편지가 도착했어요! 📩</h3>
+    
+    <button type = 'button' class = 'btn' onclick='location.href = "/{{user.username}}/board/create"' style="background-color:aliceblue; color: plum; float: right;" >편지 작성</button> <br>
+    
+    <br>
+    <table class='table'>
+        <thead class="thead-light">
+            <tr>
+                <th>제목</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in object_list %}
+                <tr>
+                    <td>
+                        <a href="{% url 'board:detail' user.username post.pk %}" style="text-decoration:none">
+                            {{post.title}}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+    
+        </tbody>
+    </table>
+    
+    {% if is_paginated %}
+    <ul class='pagination justify-content-center'> 
+    <!-- ############################################################
+        이전 페이지 그룹 이동 링크
+    ############################################################ -->
+    {% if has_previous %}
+        <li class='page-item'>
+            <a href="{%url 'login_user' user.username %}?page={{previous_page_no}}" class='page-link'>이전</a>
+        </li>       
+    {% else%}
+        <li class='page-item'>
+            <span class='page-link'>&laquo;</span>
+        </li>
+    {% endif %}
+    <!-- ############################################################
+        페이지 링크
+    ############################################################ -->
+    {% for page in page_range %}
+        {# page == 현재페이지번호(page_obj.number)#}
+        {% if page == page_obj.number %}
+            <li class='page-item active'>
+                <span class='page-link'>{{page}}</span>
+            </li>
+        {% else%}
+            <li class='page-item '>
+                <a href="{% url 'login_user' user.username%}?page={{page}}" class='page-link '>{{page}}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+    
+    
+    <!-- ############################################################
+        다음 페이지 그룹 이동 링크
+    ############################################################ -->
+    {% if has_next %}
+        <li class='page-item'>
+            <a href="{%url 'login_user' user.username%}?page={{next_page_no}}" class='page-link'>다음</a>
+        </li>
+    {% else %}
+        <li class='page-item'>
+            <span class='page-link'>&raquo;</span>
+        </li>
+    {% endif %}
+    </ul>
+    {% endif %}
+    {% endif %}
+    <a href = "{%url 'account:logout'%}">나만의 우편함 만들기</a>
+    {%endblock content%}
