@@ -1,7 +1,9 @@
+# board/forms.py
 from django import forms
-from .models import Letter
+from .models import Card
 
-class LetterForm(forms.ModelForm):
+class CardForm(forms.ModelForm):
     class Meta:
-        model = Letter
-        fields = '__all__'
+        model = Card
+        exclude = ['card_to']
+        widgets={'password':forms.PasswordInput()}

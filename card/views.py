@@ -1,14 +1,14 @@
 from audioop import reverse
 from django.shortcuts import render
 from django.views.generic import CreateView, DetailView, UpdateView, ListView
-from .forms import LetterForm
+from .forms import CardForm
+from .models import Card
 from django.urls import reverse_lazy
 from django.contrib.auth import get_user  # 로그인한 사용자의 User Model객체를 반환.
-from .models import Letter
 # Create your views here.
 class CreateCardView(CreateView):
     template_name = 'card/create_card.html'
-    form_class = LetterForm
+    form_class = CardForm
     success_url = reverse_lazy('card:mailbox')
 
     # def get_success_url(self):
@@ -32,7 +32,7 @@ class CardListView(ListView):
         
 
     template_name = "card/mailbox.html"    
-    model = Letter
+    model = Card
     # 페이징 처리
     #  class변수: paginate_by = 한페이지의 데이터 개수
     #  요청시 url : url?page=번호   http://127.0.0.1:8000/board/list?page=2   page를 생략하면 1번페이지를 조회.
@@ -43,7 +43,7 @@ class CardListView(ListView):
         # queryset = super(PostListView, self).get_queryset()
         # queryset = queryset.filter(writer=get_user(self.request).pk)
         # return queryset
-        return Letter.objects.filter(letter_to=get_user(self.request).pk)
+        return Card.objects.filter(letter_to=get_user(self.request).pk)
 
     # context data: view가 template에게 전달하는 값(dictionary). key-value쌍.  key: context name, value: context value
     # get_context_data(): Generic View를 구현할 때 template에게 추가적으로 전달해야하는 context data가 있을때 오버라이딩.
@@ -54,7 +54,7 @@ class CardListView(ListView):
     def get_context_data(self, **kwargs):
         # 부모객체의 get_context_data()를 호출해서 generic view가 자동으로 생성한 Context data를 받아온다.
         context = super().get_context_data(**kwargs)
-        context["total"] = len(Letter.objects.filter(letter_to=get_user(self.request).pk))
+        context["total"] = len(Card.objects.filter(letter_to=get_user(self.request).pk))
         # ListView에서 paginate_by 속성을 설정하면 context data에 Paginator객체가 등록된다.
         paginator = context['paginator']
         page_group_count = 10 #페이지그룹에 속한 페이지 개수
