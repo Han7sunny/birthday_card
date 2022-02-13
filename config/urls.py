@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-
-
+from account.views import UserLoginView
+from card.views import CardListView
 urlpatterns = [
-    path('',TemplateView.as_view(template_name='start_form.html'), name='start'),
+    path('',TemplateView.as_view(template_name='home.html'), name='home'),
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
-    path('card/', include('card.urls')),
-    # path('사용자 pk/')
+    path('<str:username>/', CardListView.as_view(), name='login_user'), # 추가    
+    path('<str:username>/relogin', UserLoginView.as_view(), name='relogin'), # 추가 0211
+    path('<str:username>/card/', include('card.urls'), name='card_url'),
 ]

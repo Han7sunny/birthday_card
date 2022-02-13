@@ -1,0 +1,19 @@
+{%extends 'layout.html'%}
+{%load split from card_split%}
+{%load bootstrap4%}
+{%block title%}{{card_from|split}} 본인 확인{%endblock title%}
+{%block contents%}
+{# 우편함에서 편지 선택시 생일날 계정주 확인, 생일이 아닌 날엔 작성자 확인 #}
+<form style="display:inline-block;padding-top: 10%;" method="post">
+  {% csrf_token %}
+  <div style="padding: 3%;">작성자 {{card_from|split}}님 <br> 확인을 위해 비밀번호를 입력해주세요.</div>
+  <div class="input-group input-group-sm mb-3">
+    <input type="password" name='input_password' class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+    <div class="input-group-append">
+      <button class="btn" type="submit" style="background-color:aliceblue; color: plum;">확인</button>
+    </div>
+  </div>
+</form>
+<br>
+<button class='btn btn-sm' style="background-color:aliceblue; color: plum;" onclick='location.href = "/{{user.username}}"'>우편함으로 돌아가기</button>
+{%endblock contents%}

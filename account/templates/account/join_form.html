@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+{% load bootstrap4 %}
+{% block title %}가입{% endblock title %}
+{%block head%}
+<script>
+    $(document).ready(function(){
+        $('#month').on('click',function(){
+            $('#day').empty()
+            var month = $('#month option:selected').val();
+            if(month == 4 | month == 6 |month == 9 | month == 11){
+                for (var i = 1; i <= 30; i++)
+                    $('#day').append("<option value='" + i + "'>" + i + "일</option>")
+            }
+            else if(month == 2){
+                for (var i = 1; i <= 29; i++)
+                    $('#day').append("<option value='" + i + "'>" + i + "일</option>")
+            }
+            else{
+                for (var i = 1; i <= 31; i++)
+                    $('#day').append("<option value='" + i + "'>" + i + "일</option>")
+            }
+        })
+    })
+</script>
+{%endblock head%}
+{% block contents %}
+{{error_message}}
+<form method='post' style="display:inline-block;">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <div id = "birthday" style="align-content: center;padding-bottom: 20%;">
+        <div>
+        <label>생일</label>
+        </div>
+            <select class = "form-control" id = "month" name="month" style="float:left;width:45%;text-align:center;">
+                <option value="1">1월</option>
+                <option value="2">2월</option>
+                <option value="3">3월</option>
+                <option value="4">4월</option>
+                <option value="5">5월</option>
+                <option value="6">6월</option>
+                <option value="7">7월</option>
+                <option value="8">8월</option>
+                <option value="9">9월</option>
+                <option value="10">10월</option>
+                <option value="11">11월</option>
+                <option value="12">12월</option>
+            </select>
+            <select class = "form-control" id = "day" name="day" style="float:right;width:45%;text-align: center;">
+                <option value='default'>월 먼저 선택</option>
+            </select>
+            {%if birthday_error%}
+            <style>
+                #month{border-color: #dc3545;}
+                #day{border-color: #dc3545;}
+            </style>
+            <div style="font-size:80%; color:#dc3545; padding-top: 15%;">{{birthday_error}}</div>
+            {%endif%}
+    </div>
+    <button type='submit' class='btn' style="background-color:aliceblue; color: plum;">가입</button>
+    <button type='reset' class='btn' style="background-color:aliceblue; color: plum;">초기화</button>
+</form>
+{% endblock contents %}

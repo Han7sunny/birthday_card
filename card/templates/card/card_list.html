@@ -1,0 +1,142 @@
+<!-- card/templates/card/post_list.html -->
+{% extends "layout.html" %}
+{%load split from card_split%}
+{% block title %}글목록{% endblock title%}
+{%block head%}
+<style>
+a{color:black;}
+#empty_button{margin: 3%;}
+#message{color:lightcoral;}
+table{border-color: #dee2e6;}
+</style>
+<script>
+    var today = new Date(); 
+    var month = today.getMonth() + 1;
+    var day = today.getDate();
+
+    var birthday = "{{user.birthday}}".split("/");
+    var birthday_month = Number(birthday[0])
+    var birthday_day = Number(birthday[1])
+    var birthday_check = "{{birthday}}"
+
+    $(document).ready(function(){
+        if (birthday_month === month && birthday_day + 9 === day) { // 생일날이면 리스트 안 보이고 우편함 갈래용?
+            if(!birthday_check){
+                $('#card_list').hide();
+            }
+            else{
+                $('#HBD').hide();
+                $('#card_list').show();
+            }
+        }else{            
+            $('#HBD').hide();
+        }
+    })
+</script>
+{%endblock head%}
+
+{% block contents%}
+
+{%if messages%} {#계속 남는 값이 아니야;;;#}
+    {%for message in messages%}
+    {%if message.message != 'relogin'%}
+        <div class = "alert notification-container" role="alert" id="message">
+            {{message.message}} 
+        </div>
+    {%endif%}
+    {%endfor%}
+{%endif%}
+
+<div id = 'HBD' style="padding: 3%;">
+<!--생일축하-->
+<h2>{{user.username}}님의 생일을 축하합니다!</h2>
+<h5> 우편함을 확인하시겠어요?</h5>
+<a class = "btn" href = "{%url 'relogin' user.username%}" style="background-color:aliceblue; color: plum;">확인하기</a>
+</div>
+<div id = 'card_list'>
+{% if total == 0 %}
+📭 <br>
+아직 도착한 편지가 없어요! <br>
+{{user.username}}님에게 첫번째 편지를 보내주세요! <br>
+<button type = 'button' id='empty_button' class = 'btn' onclick='location.href = "/{{user.username}}/card/create"' style="background-color:aliceblue; color: plum;" >편지 작성</button> <br>
+
+{%else%}
+<h3 style="padding: 3%;">📩 {{user.username}}님 앞으로 {{total}}통의 편지가 도착했어요! 📩</h3>
+{%if not birthday%}
+<button type = 'button' id = 'create_button' class = 'btn' onclick='location.href = "/{{user.username}}/card/create"' style="background-color:aliceblue; color: plum; float: right;" >편지 작성</button> <br><br>
+{%endif%}
+<table class='table'>
+    <thead class="thead-light">
+        <tr>
+            <th>보내는 이</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for card in object_list %}
+            <tr>
+                <td>
+                    {%if birthday%}
+                        <a href="{% url 'card:detail' user.username post.pk %}" style="text-decoration:none">
+                            {{card.card_from|split}}
+                        </a>
+                    {%else%}
+                        <a href="{% url 'card:auth' user.username post.pk %}" style="text-decoration:none">
+                            {{card.card_from|split}}
+                        </a>
+                    {%endif%}
+                </td>
+            </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<ul class='pagination justify-content-center'> 
+<!-- ############################################################
+    이전 페이지 그룹 이동 링크
+############################################################ -->
+{% if has_previous %}
+    <li class='page-item'>
+        <a href="{%url 'login_user' user.username %}?page={{previous_page_no}}" class='page-link'>이전</a>
+    </li>       
+{% else%}
+    <li class='page-item'>
+        <span class='page-link'>&laquo;</span>
+    </li>
+{% endif %}
+<!-- ############################################################
+    페이지 링크
+############################################################ -->
+{% for page in page_range %}
+    {# page == 현재페이지번호(page_obj.number)#}
+    {% if page == page_obj.number %}
+        <li class='page-item active'>
+            <span class='page-link'>{{page}}</span>
+        </li>
+    {% else%}
+        <li class='page-item '>
+            <a href="{% url 'login_user' user.username%}?page={{page}}" class='page-link '>{{page}}</a>
+        </li>
+    {% endif %}
+{% endfor %}
+
+
+<!-- ############################################################
+    다음 페이지 그룹 이동 링크
+############################################################ -->
+{% if has_next %}
+    <li class='page-item'>
+        <a href="{%url 'login_user' user.username%}?page={{next_page_no}}" class='page-link'>다음</a>
+    </li>
+{% else %}
+    <li class='page-item'>
+        <span class='page-link'>&raquo;</span>
+    </li>
+{% endif %}
+</ul>
+{% endif %}
+{% endif %}
+</div> {#div card_list#}
+<a href = "{%url 'account:logout'%}">나만의 우편함 만들기</a>
+{% endblock contents%}

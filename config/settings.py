@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-%vm*@yf83r5ql5in$kfl$e!1fh!&ohkj4mwx58-x=74br(^*sh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
 
 # Application definition
@@ -135,5 +135,4 @@ AUTH_USER_MODEL = 'account.CustomUser' # 이거 안 하면 python manage.py make
 
 # 로그인 / 로그아웃
 LOGIN_URL = '/account/login'
-LOGIN_REDIRECT_URL = '/card/mailbox' # 로그인 성공하면 넘어갈 url
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/account/join'

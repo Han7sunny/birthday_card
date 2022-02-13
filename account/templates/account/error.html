@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block title %}WARNING{% endblock title%}
+{% block contents%}
+<br>
+{%if error_message != None%}
+    <div>{{error_message}}</div><br>
+    <a href="{% url 'account:join'%}" class='btn btn-primary' style="background-color:aliceblue; color: plum;">계정 생성</a>
+{%endif%}
+{%endblock contents%}
