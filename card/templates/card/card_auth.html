@@ -6,7 +6,7 @@
 {# 우편함에서 편지 선택시 생일날 계정주 확인, 생일이 아닌 날엔 작성자 확인 #}
 <form style="display:inline-block;padding-top: 10%;" method="post">
   {% csrf_token %}
-  <div style="padding: 3%;">작성자 {{card_from|split}}님 <br> 확인을 위해 비밀번호를 입력해주세요.</div>
+  <div style="padding: 3%;">작성자 {{card_from|split}}님 <br> 본인 인증을 위해 비밀번호를 입력해 주세요.</div>
   <div class="input-group input-group-sm mb-3">
     <input type="password" name='input_password' class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
     <div class="input-group-append">

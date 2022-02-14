@@ -19,8 +19,8 @@ class UserCreateView(CreateView):
         else:
             return super().post(request, *args, **kwargs)
     
-    def form_valid(self,  form): # 등록 / 수정
-        account = form.save(commit=False)  #ModelForm.save() : insert 후에 insert한 Model 객체가 반환
+    def form_valid(self,  form):
+        account = form.save(commit=False)
         account.birthday = form.data.get('month')+"/"+form.data.get('day')
         return super().form_valid(form)
 

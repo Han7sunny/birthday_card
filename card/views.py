@@ -30,14 +30,13 @@ class CardCreateView(CreateView):
         self.get_form().data.update({"card_from":self.get_form().data['card_from']+"_"+str(get_user(request).pk)})
         return super().post(request, *args, **kwargs)
     
-    def get_success_url(self): # 등록 / 수정 / 삭제 후 이동할 url 정의
+    def get_success_url(self):
         messages.info(self.request, '편지가 정상적으로 등록되었습니다.')
-        return reverse_lazy('card:detail', args=[get_user(self.request).username, self.object.card_from]) # args: path parameter로 전달할 값들을 리스트에 순서대로 담는다.
+        return reverse_lazy('card:detail', args=[get_user(self.request).username, self.object.card_from])
 
-    def form_valid(self,  form): # 등록 / 수정
-        card = form.save(commit=False)  #ModelForm.save() : insert 후에 insert한 Model 객체가 반환
-        # commit = false : 일단 모델만 가져옴. 가상 insert 아직 DB에 안 들어감
-        card.card_to = get_user(self.request)  #로그인한 User객체
+    def form_valid(self, form):
+        card = form.save(commit=False) 
+        card.card_to = get_user(self.request)
         return super().form_valid(form)
     
     def form_invalid(self, form): # 보내는 이 이미 존재한다면
@@ -77,6 +76,12 @@ class CardDetailView(DetailView):
                     )
         return super().get(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.session.get('birthday'):
+            context['birthday'] = True
+        return context
+
 @method_decorator(login_required, 'dispatch')
 class CardUpdateView(UpdateView):
     template_name = "card/card_update.html"
@@ -86,7 +91,7 @@ class CardUpdateView(UpdateView):
     def get(self, request, *args, **kwargs):
         if kwargs['username'] != get_user(request).username:
             return render(request,
-                    "account/error.html", # 호출할 template 경로
+                    "account/error.html",
                     {'error_message':'해당 계정은 존재하지 않습니다. 계정을 생성해 주세요.'}
                     )
         try:
@@ -125,7 +130,7 @@ def card_delete(request, username, pk):
                     {'error_message':'해당 계정은 존재하지 않습니다. 계정을 생성해 주세요.'}
                     )
 
-@method_decorator(login_required, 'dispatch') # 추가 for 계정의 글 목록
+@method_decorator(login_required, 'dispatch')
 class CardListView(ListView):
     template_name = "card/card_list.html"    
     model = Card

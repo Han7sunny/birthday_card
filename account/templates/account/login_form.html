@@ -9,7 +9,7 @@
 <div>{{create_account_success}}</div><br>
 {%endif%}
 {%if relogin%}
-<h6 style="color: plum;">{{user.username}}님의 우편함 열람을 위해 본인 인증을 해주세요.</h6>
+<h6 style="color: plum;">{{user.name}}님의 우편함 열람을 위해 본인 인증을 해주세요.</h6>
 <script>
     $(document).ready(function(){
         $('#id_username').val("{{relogin}}");

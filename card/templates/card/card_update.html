@@ -1,8 +1,7 @@
-<!-- card/templates/card/card_update.html -->
 {% extends "layout.html" %}
 {% load bootstrap4 %}
 {%load split from card_split%}
-{% block title%}글 수정 폼{% endblock title%}
+{% block title%}편지 수정{% endblock title%}
 {%block head%}
 <style>
     .btn{
@@ -21,7 +20,7 @@
 <form method='post'  style="display:inline-block;">
     {% csrf_token %}
     {% bootstrap_form  form%}
-    <button type='submit' class='btn' style="background-color:aliceblue; color: plum;">글수정</button>
+    <button type='submit' class='btn' style="background-color:aliceblue; color: plum;">편지 수정</button>
     <button type='reset' class='btn' style="background-color:aliceblue; color: plum;">초기화</button>
 </form>
 {% endblock contents %}

@@ -1,4 +1,3 @@
-<!-- card/templates/card/post_list.html -->
 {% extends "layout.html" %}
 {%load split from card_split%}
 {% block title %}글목록{% endblock title%}
@@ -20,13 +19,14 @@ table{border-color: #dee2e6;}
     var birthday_check = "{{birthday}}"
 
     $(document).ready(function(){
-        if (birthday_month === month && birthday_day + 9 === day) { // 생일날이면 리스트 안 보이고 우편함 갈래용?
-            if(!birthday_check){
-                $('#card_list').hide();
-            }
-            else{
+        if (birthday_month === month && birthday_day === day) { // 생일날이면 리스트 안 보이고 우편함 갈래용?
+            if(birthday_check){
                 $('#HBD').hide();
                 $('#card_list').show();
+            }
+            else{
+                $('#HBD').show();
+                $('#card_list').hide();
             }
         }else{            
             $('#HBD').hide();
@@ -36,39 +36,36 @@ table{border-color: #dee2e6;}
 {%endblock head%}
 
 {% block contents%}
-
-{%if messages%} {#계속 남는 값이 아니야;;;#}
+{%if messages%}
     {%for message in messages%}
-    {%if message.message != 'relogin'%}
         <div class = "alert notification-container" role="alert" id="message">
             {{message.message}} 
         </div>
-    {%endif%}
     {%endfor%}
 {%endif%}
 
 <div id = 'HBD' style="padding: 3%;">
-<!--생일축하-->
-<h2>{{user.username}}님의 생일을 축하합니다!</h2>
-<h5> 우편함을 확인하시겠어요?</h5>
-<a class = "btn" href = "{%url 'relogin' user.username%}" style="background-color:aliceblue; color: plum;">확인하기</a>
+    <h2>🎇{{user.name}}님의 생일을 축하합니다!🎇</h2>
+    <!-- <h5> 우편함을 확인하시겠어요?</h5> -->
+    <br><a class = "btn" href = "{%url 'relogin' user.username%}" style="background-color:aliceblue; color: plum;">우편함 확인하기</a>
 </div>
 <div id = 'card_list'>
-{% if total == 0 %}
+{% if total == 0%}
 📭 <br>
 아직 도착한 편지가 없어요! <br>
-{{user.username}}님에게 첫번째 편지를 보내주세요! <br>
+{%if not birthday%}
+{{user.name}}님에게 첫번째 편지를 보내주세요! <br>
 <button type = 'button' id='empty_button' class = 'btn' onclick='location.href = "/{{user.username}}/card/create"' style="background-color:aliceblue; color: plum;" >편지 작성</button> <br>
-
+{%endif%}
 {%else%}
-<h3 style="padding: 3%;">📩 {{user.username}}님 앞으로 {{total}}통의 편지가 도착했어요! 📩</h3>
+<h3 style="padding: 3%;">📩 {{user.name}}님 앞으로 {{total}}통의 편지가 도착했어요! 📩</h3>
 {%if not birthday%}
 <button type = 'button' id = 'create_button' class = 'btn' onclick='location.href = "/{{user.username}}/card/create"' style="background-color:aliceblue; color: plum; float: right;" >편지 작성</button> <br><br>
 {%endif%}
 <table class='table'>
     <thead class="thead-light">
         <tr>
-            <th>보내는 이</th>
+            <th>편지 작성자</th>
         </tr>
     </thead>
     <tbody>
@@ -76,11 +73,11 @@ table{border-color: #dee2e6;}
             <tr>
                 <td>
                     {%if birthday%}
-                        <a href="{% url 'card:detail' user.username post.pk %}" style="text-decoration:none">
+                        <a href="{% url 'card:detail' user.username card.pk %}" style="text-decoration:none">
                             {{card.card_from|split}}
                         </a>
                     {%else%}
-                        <a href="{% url 'card:auth' user.username post.pk %}" style="text-decoration:none">
+                        <a href="{% url 'card:auth' user.username card.pk %}" style="text-decoration:none">
                             {{card.card_from|split}}
                         </a>
                     {%endif%}
@@ -137,6 +134,6 @@ table{border-color: #dee2e6;}
 </ul>
 {% endif %}
 {% endif %}
-</div> {#div card_list#}
+</div><br>
 <a href = "{%url 'account:logout'%}">나만의 우편함 만들기</a>
 {% endblock contents%}

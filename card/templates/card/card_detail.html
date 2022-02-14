@@ -1,54 +1,11 @@
-<!-- card/templates/card/card_detail.html -->
 {% extends "layout.html" %}
 {%load split from card_split%}
-{% block title%}글상세{% endblock title %}
+{% block title%}편지 내용 확인{% endblock title %}
 {%block head%}
 <style>
     b{font-size: 25px; font-weight: 100;}
     #message{color:lightcoral;}
 </style>
-<script type="text/javascript">
-    // 현재 날짜
-    var today = new Date(); 
-    var month = today.getMonth() + 1;
-    var day = today.getDate();
-
-    var birthday = "{{user.birthday}}".split("/");
-    var birthday_month = Number(birthday[0])
-    var birthday_day = Number(birthday[1])
-
-    $(document).ready(function(){
-        if (birthday_month !== month || birthday_day+8 !== day){
-            $('#button_update_delete').append('<a class="btn btn-sm" style="background-color:aliceblue; color: plum;" value="update">글수정</a>')
-            $('#button_update_delete').append('<a class="btn btn-sm" style="background-color:aliceblue; color: plum;" value="delete">글삭제</a>')
-        
-        var button_value;
-        $('a').on('click', function(){
-            button_value = $(this).attr('value'); // 글수정 or 글삭제 버튼
-            $('#hidden_auth').empty()
-            $('#hidden_auth').append("<p style='color:red;border:20px'>{{object.card_from|split}}님, 인증을 위해 비밀번호를 입력해주세요!</p>")
-            $('#hidden_auth').append("<input type='password' id='self_auth'>")
-            $('#hidden_auth').append("<button class='btn' type='button' id='auth_button'>확인</button>")
-        }),
-        $('#hidden_auth').on('click', '#auth_button', function(){
-            var accessor = $('p').attr('value');
-
-            if($('#self_auth').val() == "{{object.password}}"){
-                if(button_value == "update")
-                    location.href = "/{{user.username}}/card/update/{{object.pk}}"
-                else if(button_value == "delete")
-                    location.href = "/{{user.username}}/card/delete/{{object.pk}}"
-               }
-            else {
-                $('#hidden_auth').empty()
-                $('#hidden_auth').append("<p style='color:red;'>비밀번호가 일치하지 않습니다. 다시 입력해주세요.</p>")
-                $('#hidden_auth').append("<input type='password' id='self_auth'>")
-                $('#hidden_auth').append("<button class='btn' type='button' id='auth_button'>확인</button>")
-            }
-        })
-        }
-    }) // documnet end
-</script>
 {%endblock head%}
 {% block contents %}
 {%if messages%}
@@ -58,7 +15,7 @@
     </div>
     {%endfor%}
 {%endif%}
-<b>To. </b> {{object.card_to.username}}
+<b>To. </b> {{object.card_to.name}}
 <div style="border: 0px solid gray;padding:3%;min-height:100px;margin:3%;">
     {{object.content|linebreaksbr}} <br>
 </div>
@@ -72,17 +29,10 @@
 
 <div>
     <br>
-    {% if user.is_authenticated %} <!--현재 사용자가 로그인 했는지 여부-->
-        {% if user.pk == object.card_to.pk %} <!--user 변수 : 로그인한 사용자 Model-->
-        <div id = 'button_update_delete'>
-        <button class='btn btn-sm' style="background-color:aliceblue; color: plum;" onclick='location.href = "/{{user.username}}"'>우편함으로 돌아가기</button>
-            {#계정주의 생일 당일 : 글수정, 글삭제 불가능#}
-        </div>
-        <br>
-        <div id="hidden_auth" style="margin: 3%;">
-            {# 글수정 또는 글삭제 버튼을 누를 경우 비밀번호 입력창 생성 #}
-        </div>
-        {%endif%}
-    {% endif %}
+    <a class="btn btn-sm" href = "{%url 'login_user' user.username %}" style="background-color:aliceblue; color: plum;" >우편함으로 돌아가기</a>
+    {%if not birthday%}
+    <a class="btn btn-sm" href = "{%url 'card:update' user.username card.pk %}" style="background-color:aliceblue; color: plum;" >편지 수정</a>
+    {%endif%}
+    <a class="btn btn-sm" href = "{%url 'card:delete' user.username card.pk %}" style="background-color:aliceblue; color: plum;" >편지 삭제</a>
 </div>
 {% endblock contents %}
